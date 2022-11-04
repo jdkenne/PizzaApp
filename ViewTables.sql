@@ -1,3 +1,5 @@
+use Pizzeria;
+
 SELECT * FROM TOPPINGS;
 
 SELECT * FROM PIZZA;
