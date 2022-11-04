@@ -1,3 +1,5 @@
+/*Written by Josh Kennerly and Justin Schulz*/
+
 use Pizzeria;
 
 INSERT INTO DISCOUNTS(DISCOUNT_ID, DISCOUNT_NAME, DISCOUNT_PERCENT, DISCOUNT_CASH) VALUES (1, 'Employee', 15, 0);
