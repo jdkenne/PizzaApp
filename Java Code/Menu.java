@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Random;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 /*
  * This file is where the front end magic happens.
  * 
@@ -113,7 +118,7 @@ public class Menu {
 				System.out.println("Enter the table number");
 				int tableNum = Integer.parseInt(reader.readLine());
 				Pizza p = buildPizza(orderId);
-				order.setCustID(DBNinja.getNextCustomerID());
+				order.setCustID(DBNinja.getNextOrderID());
 				order.setDate(p.getPizzaDate());
 				order.setBusPrice(p.getBusPrice());
 				order.setCustPrice(p.getCustPrice());
@@ -145,7 +150,7 @@ public class Menu {
 		}
 		else{
 			EnterCustomer();
-			order.setCustID(DBNinja.getNextCustomerID());
+			order.setCustID(DBNinja.getNextOrderID());
 			DBNinja.addOrder(order);
 			
 			System.out.println("Is this order for: \n1.)Dine-in\n2.)Pick-up\n3.)Delivery\nEnter to corresponding number\n ");
@@ -164,8 +169,7 @@ public class Menu {
 				order.setIsComplete(p.getPizzaState());
 				order.setOrderType(DBNinja.dine_in);
 				DBNinja.updateOrder(order);
-				
-				//create dinein type order and addd tablenum
+
 				DineinOrder dineinOrder = new DineinOrder(order.getOrderID(),order.getCustID(),
 						order.getDate(), order.getCustPrice(), order.getBusPrice(), order.getIsComplete(), tableNum);
 				DBNinja.addSubOrder(dineinOrder);
@@ -204,18 +208,25 @@ public class Menu {
 	}
 	
 	
-	public static void viewCustomers()
+	public static void viewCustomers() throws SQLException, IOException
 	{
+		Connection connection = DBConnector.make_connection();
+		ResultSet rs = null;
 		/*
 		 * Simply print out all of the customers from the database. 
 		 */
-		ArrayList<Customer> customers = DBNinja.getCustomerList();
+		try (PreparedStatement ps = connection.prepareStatement(viewCustomers)) {
+			rs = ps.executeQuery();
+			ArrayList<Customer> customers = DBNinja.getCustomerList();
+			for (Customer c: customers) {
+				System.out.println(c.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-		for (Customer c: customers) {
-			System.out.println(c.toString());
-		}	
+		connection.close();
 	}
-	
 
 	// Enter a new customer in the database
 	public static void EnterCustomer() throws SQLException, IOException 
@@ -231,7 +242,7 @@ public class Menu {
 		 * 
 		 * Once you get the name and phone number (and anything else your design might have) add it to the DB
 		 */
-		int customerID = DBNinja.getNextCustomerID() + 1;
+		int customerID = DBNinja.getNextOrderID() + 1;
 		String Fname = "";
 		String Lname = "";
 		String phone = "";

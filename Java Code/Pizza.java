@@ -16,7 +16,7 @@ public class Pizza
 	private String CrustType;
 	private String Size;
 	private int OrderID;
-	private String PizzaState;
+	private int PizzaState;
 	private String PizzaDate;
 	private double CustPrice;
 	private double BusPrice;

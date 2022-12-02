@@ -84,7 +84,7 @@ public final class DBNinja {
 		 */
 		String addedOrder = "INSERT INTO cust_order(ORDER_ID, CUSTOMER_ID, ORDER_TYPE, TOTAL_PRICE, TOTAL_COST, TIME_STAMP, IS_COMPLETE)"
 				+ " VALUES" + "(?,?,?,?,?,?,?)";
-		try (PreparedStatement ps = conn.prepareStatement(newOrder)) {
+		try (PreparedStatement ps = conn.prepareStatement(addedOrder)) {
 			ps.setInt(1, o.getOrderID());
 			ps.setInt(2, o.getCustID());
 			ps.setString(3, o.getOrderType());
@@ -99,6 +99,68 @@ public final class DBNinja {
 		}
 		//DO NOT FORGET TO CLOSE YOUR CONNECTION
 		conn.close();
+	}
+
+	public static void updateOrder(Order o) throws SQLException, IOException {
+		connect_to_db();
+		String updateOrder = "UPDATE cust_order SET ORDER_TYPE = ?, TOTAL_PRICE = ?" +
+				", TOTAL_COST = ?" + ", TIME_STAMP = ?"
+				+ ", IS_COMPLETE = ? WHERE ORDER_ID = ?";
+		try(PreparedStatement ps = conn.prepareStatement(updateOrder)){
+			ps.setString(1, o.getOrderType());
+			ps.setDouble(2, o.getCustPrice());
+			ps.setDouble(3, o.getBusPrice());
+			ps.setString(4, o.getDate());
+			ps.setLong(5,  o.getIsComplete());
+			ps.setInt(6, o.getOrderID());
+			ps.executeUpdate();
+			ps.close();
+		}
+		conn.close();
+	}
+
+	public static void addSubOrder(Order o) throws SQLException, IOException {
+		connect_to_db();
+		if (o instanceof DineinOrder) {
+			DineinOrder dineinOrder = (DineinOrder) o;
+			String addOrder = "INSERT INTO dinein(ORDER_ID, TABLE_NUM)" + "VALUES" + "(?,?)";
+			try (PreparedStatement ps2 = conn.prepareStatement(addOrder)) {
+				ps2.setInt(1, dineinOrder.getOrderID());
+				ps2.setInt(2, dineinOrder.getTableNum());
+				ps2.executeUpdate();
+				ps2.close();
+			}
+			catch (SQLException e) {
+				System.out.println(e);
+			}
+		}
+		if (o instanceof PickupOrder) {
+			PickupOrder porder = (PickupOrder) o;
+			String addPOrder = "INSERT INTO pickup(ORDER_ID)" + "VALUES" + "(?)";
+			try (PreparedStatement ps2 = conn.prepareStatement(addPOrder)) {
+				ps2.setInt(1, porder.getOrderID());
+				ps2.executeUpdate();
+				ps2.close();
+			}
+			catch (SQLException e) {
+				System.out.println(e);
+			}
+		}
+		if (o instanceof DeliveryOrder) {
+			DeliveryOrder dorder = (DeliveryOrder) o;
+			String addDOrder = "INSERT INTO delivery(ORDER_ID, ADDRESS)" + "VALUES" + "(?, ?)";
+			try (PreparedStatement ps2 = conn.prepareStatement(addDOrder)) {
+				ps2.setInt(1, dorder.getOrderID());
+				ps2.setString(2, dorder.getAddress());
+				ps2.executeUpdate();
+				ps2.close();
+			}
+			catch (SQLException e) {
+				System.out.println(e);
+			}
+		}
+		conn.close();
+
 	}
 	
 	public static void addPizza(Pizza p) throws SQLException, IOException
@@ -178,7 +240,7 @@ public final class DBNinja {
 		String decTopping = "UPDATE topping SET CURR_INVENTORY " + "= CURR_INVENTORY -" + howMany
 				+ " WHERE TOPPING_ID =" + ID;
 
-		try (PreparedStatement ps = conn.prepareStatement(decreaseTopping)) {
+		try (PreparedStatement ps = conn.prepareStatement(decTopping)) {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
@@ -206,11 +268,7 @@ public final class DBNinja {
 		 * You might use this, you might not depending on where / how to want to update
 		 * this table
 		 */
-		
-		
-		
-		
-		
+		conn.close();
 		//DO NOT FORGET TO CLOSE YOUR CONNECTION
 	}
 	
@@ -222,11 +280,7 @@ public final class DBNinja {
 		 * You might use this, you might not depending on where / how to want to update
 		 * this table
 		 */
-		
-		
-		
-		
-		
+		conn.close();
 		//DO NOT FORGET TO CLOSE YOUR CONNECTION
 	}
 	
@@ -239,7 +293,7 @@ public final class DBNinja {
 		 * This should add a customer to the database
 		 */
 		String add = "INSERT INTO customer(CUSTOMER_ID,LAST_NAME,FIRST_NAME,PHONE)" + "VALUES" + "(?,?,?,?)";
-		try (PreparedStatement ps = conn.prepareStatement(makeCustomer)) {
+		try (PreparedStatement ps = conn.prepareStatement(add)) {
 			ps.setInt(1, c.getCustID());
 			ps.setString(2, c.getLName());
 			ps.setString(3, c.getFName());
@@ -262,14 +316,7 @@ public final class DBNinja {
 		 * add code to mark an order as complete in the DB. You may have a boolean field
 		 * for this, or maybe a completed time timestamp. However you have it.
 		 */
-		
-
-
-		
-		
-		
-		
-		
+		conn.close();
 		//DO NOT FORGET TO CLOSE YOUR CONNECTION
 	}
 
@@ -281,13 +328,7 @@ public final class DBNinja {
 		/*
 		 * Adds toAdd amount of topping to topping t.
 		 */
-
-
-		
-		
-		
-		
-		
+		conn.close();
 		//DO NOT FORGET TO CLOSE YOUR CONNECTION
 	}
 
@@ -382,16 +423,7 @@ public final class DBNinja {
 		 * You may or may not need this function depending on how you fetch
 		 * your orders from the DB in the getCurrentOrders function.
 		 */
-		
-		
-		
-		
-		
-		
-		
-		//DO NOT FORGET TO CLOSE YOUR CONNECTION
 		return null;
-		
 	}
 	
 	public static boolean checkDate(int year, int month, int day, String dateOfOrder)
