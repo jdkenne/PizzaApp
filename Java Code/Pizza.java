@@ -28,8 +28,7 @@ public class Pizza
 	//each index in this array will represent whether the topping at Toppings.get(index) is doubled.
 	private boolean[] isToppingDoubled;//There's definitely a better way to do this, so you're welcome to try and find it.
 	
-	
-	public Pizza(int pizzaID, String size, String crustType, int orderID, String pizzaState, String pizzaDate,
+public Pizza(int pizzaID, String size, String crustType, int orderID, int pizzaState, String pizzaDate,
 			double custPrice, double busPrice) {
 		PizzaID = pizzaID;
 		CrustType = crustType;
@@ -68,7 +67,7 @@ public class Pizza
 
 
 
-	public String getPizzaState() {
+	public int getPizzaState() {
 		return PizzaState;
 	}
 
@@ -128,7 +127,7 @@ public class Pizza
 
 
 
-	public void setPizzaState(String pizzaState) {
+	public void setPizzaState(int pizzaState) {
 		PizzaState = pizzaState;
 	}
 
@@ -212,6 +211,5 @@ public class Pizza
 				+ " | Pizza Status: " + PizzaState + ", as of " + PizzaDate + " | Customer Price= " + CustPrice + " | Business Price= "
 				+ BusPrice;
 	}
-	
 	
 }
