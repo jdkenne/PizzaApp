@@ -19,9 +19,9 @@ public class DBConnector {
     // enter your password here
     private static String password = "WeLuvPizza";
     // enter your database name here
-    private static String database_name = "jdbc:";
+    private static String database_name = "ProjectDB";
     // Do not change the port. 3306 is the default MySQL port
-    private static String url = "";
+    private static String url = "jdbc:cpsc4620-jjdb.cobd8enwsupz.us-east-1.rds.amazonaws.com";
     private static Connection conn;
 
 
