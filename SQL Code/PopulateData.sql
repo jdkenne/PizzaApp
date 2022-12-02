@@ -2,12 +2,15 @@
 
 use Pizzeria;
 
-INSERT INTO DISCOUNTS(DISCOUNT_ID, DISCOUNT_NAME, DISCOUNT_PERCENT, DISCOUNT_CASH) 
-VALUES (1, 'Employee', 15, 0),
-       (2, 'Lunch Special Medium', 0, 1.00),
-       (3, 'Lunch Special Large', 0, 2.00),
-       (4, 'Specialty Pizza', 0, 1.50),
-       (5, 'Gameday Special', 20, 0);
+DELIMITER ;
+INSERT INTO DISCOUNTS
+	(DISCOUNT_ID, DISCOUNT_PERCENT, DISCOUNT_CASH) 
+	VALUES 
+		('Employee', 15, 0),
+       		('Lunch Special Medium', 0, 1.00),
+       		('Lunch Special Large', 0, 2.00),
+       		('Specialty Pizza', 0, 1.50),
+       		('Gameday Special', 20, 0);
 
 INSERT INTO TOPPINGS(TOPPING_ID, TOPPING_NAME, TOPPING_PRICE, TOPPING_COST, TOPPING_INVENTORY, TOPPING_SMALL, TOPPING_MED, TOPPING_LARGE, TOPPING_XL)
 VALUES (1, 'Pepperoni', 1.25, 0.2, 100, 2, 2.75, 3.5, 4.5),
